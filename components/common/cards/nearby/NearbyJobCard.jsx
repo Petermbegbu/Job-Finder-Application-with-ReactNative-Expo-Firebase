@@ -1,14 +1,26 @@
-import React from 'react'
-import { View, Text } from 'react-native'
+import React from "react";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 
-import styles from './nearbyjobcard.style'
+const logo = require("../../../../assets/favicon.png");
+import styles from "./nearbyjobcard.style";
 
-const NearbyJobCard = () => {
+const NearbyJobCard = ({ JobList, handleNavigate }) => {
   return (
-    <View>
-      <Text>NearbyJobCard</Text>
-    </View>
-  )
-}
+    <TouchableOpacity style={styles.container} onPress={handleNavigate}>
+      <TouchableOpacity style={styles.logoContainer}>
+        <Image source={logo} resizeMode="contain" style={styles.logoImage} />
+      </TouchableOpacity>
 
-export default NearbyJobCard
+      <View style={styles.textContainer}>
+        <Text style={styles.jobName} numberOfLines={1}>
+          {JobList.JobTitle}
+        </Text>
+        <Text style={styles.jobType}>{JobList.location}`</Text>
+
+        <Text style={styles.jobType}>{JobList.WorkType}`</Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+export default NearbyJobCard;

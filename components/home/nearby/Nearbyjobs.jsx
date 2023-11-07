@@ -1,14 +1,41 @@
-import React from 'react'
-import { View, Text } from 'react-native'
+import { useRouter } from "expo-router";
+import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 
-import styles from './nearbyjobs.style'
+import { COLORS } from "../../../constants";
+import useFetch from "../../../hook/useFetch";
+import NearbyJobCard from "../../common/cards/nearby/NearbyJobCard";
+import styles from "./nearbyjobs.style";
 
 const Nearbyjobs = () => {
-  return (
-    <View>
-      <Text>Nearbyjobs</Text>
-    </View>
-  )
-}
+  const router = useRouter();
+  const { error, isLoading, JobList } = useFetch(5);
 
-export default Nearbyjobs
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Find Jobs</Text>
+        <TouchableOpacity>
+          <Text style={styles.headerBtn}>Show all</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.cardsContainer}>
+        {isLoading ? (
+          <ActivityIndicator size="large" colors={COLORS.tertiary} />
+        ) : error ? (
+          <Text>{error}</Text>
+        ) : (
+          JobList?.map((JobList) => (
+            <NearbyJobCard
+              JobList={JobList}
+              key={JobList.JobId}
+              handleNavigate={() => router.push(`/JobDetails/${JobList}`)}
+            />
+          ))
+        )}
+      </View>
+    </View>
+  );
+};
+
+export default Nearbyjobs;
