@@ -12,7 +12,7 @@ import {
 import { icons, SIZES } from "../../../constants";
 import styles from "./welcome.style";
 
-const jobTypes = ["Full-time", "Part-time", "Contractor"];
+const jobTypes = ["Full-time", "Part-time", "Contract"];
 
 const Welcome = () => {
   const router = useRouter();
@@ -61,6 +61,7 @@ const Welcome = () => {
           keyExtractor={(item) => item}
           contentContainerStyle={{ columnGap: SIZES.small }}
           horizontal
+          showsHorizontalScrollIndicator={false}
         />
       </View>
     </View>

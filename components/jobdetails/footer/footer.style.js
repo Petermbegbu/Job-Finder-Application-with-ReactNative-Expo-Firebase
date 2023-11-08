@@ -9,10 +9,11 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     padding: SIZES.small,
-    backgroundColor: "#FFF",
-    justifyContent: "space-between",
+    backgroundColor: "#EDEEF2",
+    justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
+    height: 70,
   },
   likeBtn: {
     width: 55,
@@ -34,7 +35,7 @@ const styles = StyleSheet.create({
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
-    marginLeft: SIZES.medium,
+    // marginLeft: SIZES.medium,
     borderRadius: SIZES.medium,
   },
   applyBtnText: {
