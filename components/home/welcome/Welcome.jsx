@@ -12,7 +12,7 @@ import {
 import { icons, SIZES } from "../../../constants";
 import styles from "./welcome.style";
 
-const jobTypes = ["Full-time", "Part-time", "Contract"];
+const jobTypes = ["Full-Time", "Part-Time", "Contract", "Intern", "Temporary"];
 
 const Welcome = () => {
   const router = useRouter();

@@ -1,10 +1,4 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  ScrollView,
-  RefreshControl,
-} from "react-native";
+import { View, SafeAreaView, ScrollView, RefreshControl } from "react-native";
 import { useState } from "react";
 import { Stack, useGlobalSearchParams, useRouter } from "expo-router";
 import { COLORS, SIZES, icons } from "../../constants";

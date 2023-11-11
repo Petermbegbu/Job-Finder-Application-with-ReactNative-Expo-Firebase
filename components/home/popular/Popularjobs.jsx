@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useRouter } from "expo-router";
 import {
   View,
@@ -15,6 +16,12 @@ import styles from "./popularjobs.style";
 const Popularjobs = () => {
   const router = useRouter();
   const { error, isLoading, LatestJobs } = useFetch(5);
+  const [selectedJob, setSelectedJob] = useState();
+
+  const handleCardPress = (item) => {
+    router.push(`/job-details/${item.JobId}`);
+    setSelectedJob(item.JobId);
+  };
 
   return (
     <View style={styles.container}>
@@ -33,10 +40,16 @@ const Popularjobs = () => {
         ) : (
           <FlatList
             data={LatestJobs}
-            renderItem={({ item }) => <PopularJobCard item={item} />}
             keyExtractor={(item) => item.JobId}
             contentContainerStyle={{ columnGap: SIZES.medium }}
             horizontal
+            renderItem={({ item }) => (
+              <PopularJobCard
+                item={item}
+                selectedJob={selectedJob}
+                handleCardPress={handleCardPress}
+              />
+            )}
           />
         )}
       </View>
