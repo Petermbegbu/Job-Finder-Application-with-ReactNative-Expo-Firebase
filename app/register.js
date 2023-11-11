@@ -8,25 +8,37 @@ import {
 import { Formik } from "formik";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Yup from "yup";
+import { auth } from "../Database/firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 import { COLORS } from "../constants";
 
 const validationSchema = Yup.object().shape({
-  name: Yup.string().required().label("Name"),
+  //   name: Yup.string().required().label("Name"),
   email: Yup.string().required().email().label("Email"),
   password: Yup.string().min(4).required().label("Password"),
 });
 
 const Register = () => {
+  const handleRegister = async ({ email, password }) => {
+    try {
+      const user = await createUserWithEmailAndPassword(auth, email, password);
+
+      console.log("register user", user);
+    } catch (error) {
+      console.log("firebase error", error);
+    }
+  };
+
   return (
     <Formik
-      initialValues={{ name: "", email: "", password: "" }}
-      onSubmit={(values) => console.log(values)}
+      initialValues={{ email: "", password: "" }}
+      onSubmit={(values) => handleRegister(values)}
       validationSchema={validationSchema}
     >
       {({ handleChange, handleSubmit, values, errors }) => (
         <SafeAreaView style={styles.container}>
-          <View>
+          {/* <View>
             <TextInput
               value={values.name}
               placeholder="name"
@@ -35,7 +47,7 @@ const Register = () => {
               autoCapitalize="words"
             />
             <Text style={styles.errorText}>{errors.name}</Text>
-          </View>
+          </View> */}
 
           <View>
             <TextInput
