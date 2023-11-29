@@ -21,7 +21,7 @@ const Welcome = () => {
   return (
     <View>
       <View style={styles.container}>
-        <Text style={styles.userName}>Hello Peter</Text>
+        <Text style={styles.userName}>Hello</Text>
         <Text style={styles.welcomeMessage}>Find your perfect jobs</Text>
       </View>
 

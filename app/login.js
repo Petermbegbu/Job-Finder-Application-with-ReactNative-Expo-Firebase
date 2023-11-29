@@ -3,17 +3,17 @@ import {
   Text,
   View,
   TextInput,
+  SafeAreaView,
   TouchableOpacity,
   KeyboardAvoidingView,
 } from "react-native";
-import { Formik } from "formik";
-import { SafeAreaView } from "react-native-safe-area-context";
 import * as Yup from "yup";
+import { Formik } from "formik";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { router } from "expo-router";
 
 import { auth } from "../Database/firebase";
 import { COLORS } from "../constants";
-import { router } from "expo-router";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -21,13 +21,21 @@ const validationSchema = Yup.object().shape({
 });
 
 const Login = () => {
-  const handleLogin = async ({ email, password }) => {
+  const handleLogin = async (values, onSubmitProps) => {
+    const { email, password } = values;
+
     try {
       const user = await signInWithEmailAndPassword(auth, email, password);
 
+      router.push("/");
+
       console.log("login user", user);
     } catch (error) {
-      console.log("firebase error", error);
+      console.log("firebase error", error.message);
+
+      if (error.code.toString().includes("invalid")) {
+        onSubmitProps.setFieldError("password", "Invalid Credentials.");
+      }
     }
   };
 
@@ -35,7 +43,7 @@ const Login = () => {
     <SafeAreaView style={styles.container}>
       <Formik
         initialValues={{ email: "", password: "" }}
-        onSubmit={(values) => handleLogin(values)}
+        onSubmit={handleLogin}
         validationSchema={validationSchema}
       >
         {({ handleChange, handleSubmit, values, errors }) => (
@@ -101,7 +109,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: "center",
-    backgroundColor: "#dddddd",
+    // backgroundColor: "#dddddd",
   },
 
   formContainer: {

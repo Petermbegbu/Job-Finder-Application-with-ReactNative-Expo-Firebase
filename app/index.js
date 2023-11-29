@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { View, ScrollView, SafeAreaView, Text } from "react-native";
 import { Stack, useRouter } from "expo-router";
 
@@ -15,6 +14,8 @@ const Home = () => {
 
   const handleImagePress = () => router.push("/login");
 
+  const handleMenuPress = () => {};
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.lightWhite }}>
       <Stack.Screen
@@ -22,7 +23,11 @@ const Home = () => {
           headerStyle: { backgroundColor: COLORS.lightWhite },
           headerShadowVisible: true,
           headerLeft: () => (
-            <ScreenHeaderBtn iconUrl={icons.menu} dimension="60%" />
+            <ScreenHeaderBtn
+              iconUrl={icons.menu}
+              dimension="60%"
+              handlePress={handleMenuPress}
+            />
           ),
           headerRight: () => (
             <ScreenHeaderBtn

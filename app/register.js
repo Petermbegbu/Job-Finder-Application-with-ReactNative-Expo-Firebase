@@ -5,12 +5,13 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import { useRouter } from "expo-router";
 import { Formik } from "formik";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Yup from "yup";
-import { auth } from "../Database/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
+import { auth } from "../Database/firebase";
 import { COLORS } from "../constants";
 
 const validationSchema = Yup.object().shape({
@@ -20,20 +21,36 @@ const validationSchema = Yup.object().shape({
 });
 
 const Register = () => {
-  const handleRegister = async ({ email, password }) => {
+  const router = useRouter();
+
+  const handleRegister = async (values, onSubmitProps) => {
+    const { email, password } = values;
+
     try {
       const user = await createUserWithEmailAndPassword(auth, email, password);
 
+      router.push("/login");
       console.log("register user", user);
     } catch (error) {
-      console.log("firebase error", error);
+      console.log("firebase err", error.message);
+
+      if (error.code.toString().includes("email")) {
+        onSubmitProps.setFieldError("email", error.message);
+      }
+
+      if (error.code.toString().includes("weak-password")) {
+        onSubmitProps.setFieldError(
+          "password",
+          "Password should be at least 6 characters"
+        );
+      }
     }
   };
 
   return (
     <Formik
       initialValues={{ email: "", password: "" }}
-      onSubmit={(values) => handleRegister(values)}
+      onSubmit={handleRegister}
       validationSchema={validationSchema}
     >
       {({ handleChange, handleSubmit, values, errors }) => (
@@ -90,7 +107,7 @@ const styles = StyleSheet.create({
     gap: 10,
     padding: 20,
     justifyContent: "center",
-    backgroundColor: "#dddddd",
+    // backgroundColor: "#dddddd",
   },
   inputField: {
     backgroundColor: "white",

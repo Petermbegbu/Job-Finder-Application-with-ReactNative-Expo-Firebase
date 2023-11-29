@@ -1,3 +1,6 @@
+
+// import DrawerNavigator from "./Navigator/DrawerNavigator";
+
 import { useCallback } from "react";
 import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
@@ -21,6 +24,12 @@ const Layout = () => {
   if (!fontsLoaded) return null;
 
   return <Stack onLayout={onLayoutRootView} />;
+
+  // return (
+  //   <NavigationContainer>
+  //     <DrawerNavigator />
+  //   </NavigationContainer>
+  // );
 };
 
 export default Layout;
