@@ -17,6 +17,7 @@ import Responsibility from "./jobdetails/responsibility/Responsibility";
 import NearbyJobCard from "./common/cards/nearby/NearbyJobCard";
 import DropdownPicker from "./common/dropdown/DropdownPicker";
 import FilePicker from "./common/filePicker/FIlePicker";
+import FileViewer from "./common/fileViewer/fileViewer";
 
 export {
   ScreenHeaderBtn,
@@ -32,4 +33,5 @@ export {
   Responsibility,
   DropdownPicker,
   FilePicker,
+  FileViewer,
 };

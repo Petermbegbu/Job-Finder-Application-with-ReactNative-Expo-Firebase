@@ -55,17 +55,6 @@ const Register = () => {
     >
       {({ handleChange, handleSubmit, values, errors }) => (
         <SafeAreaView style={styles.container}>
-          {/* <View>
-            <TextInput
-              value={values.name}
-              placeholder="name"
-              onChangeText={handleChange("name")}
-              style={styles.inputField}
-              autoCapitalize="words"
-            />
-            <Text style={styles.errorText}>{errors.name}</Text>
-          </View> */}
-
           <View>
             <TextInput
               value={values.email}

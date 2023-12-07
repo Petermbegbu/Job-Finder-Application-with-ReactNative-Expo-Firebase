@@ -5,9 +5,22 @@
       "bundler": "metro"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "@config-plugins/react-native-blob-util",
+      "@config-plugins/react-native-pdf"
     ],
     "name": "Job_Finder_App",
-    "slug": "Job_Finder_App"
+    "slug": "Job_Finder_App",
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "9095dc21-7f83-49f3-9b3e-8ff2d8715612"
+      }
+    },
+    "android": {
+      "package": "com.petermbegbu.Job_Finder_App"
+    }
   }
 }

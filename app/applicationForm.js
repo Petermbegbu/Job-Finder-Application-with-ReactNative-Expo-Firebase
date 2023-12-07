@@ -12,17 +12,23 @@ import {
 } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import { useState } from "react";
 import { router } from "expo-router";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import * as FileSystem from "expo-file-system";
+import * as IntentLauncher from "expo-intent-launcher";
 
 import { firestoreDb, collection, addDoc } from "../Database/firebase";
 import { COLORS } from "../constants";
-import { DropdownPicker, FilePicker } from "../components";
+import { DropdownPicker, FilePicker, FileViewer } from "../components";
 import { serverTimestamp } from "firebase/firestore";
 import { images } from "../constants";
-import { useState } from "react";
 
 const ApplicationForm = () => {
   const [isModalFeed, setIsModalFeed] = useState(false);
+  const [isPreviewModal, setIsPreviewModal] = useState(false);
+  const [file, setFile] = useState("");
+  const [downloadedUri, setDownloadedUri] = useState(null);
 
   const onFeedBackPress = () => {
     setIsModalFeed(false);
@@ -44,23 +50,41 @@ const ApplicationForm = () => {
   });
 
   const handleJobSubmit = async (values, onSubmitProps) => {
-    console.log("values", values);
-
     try {
-      //   const docRef = await addDoc(collection(firestoreDb, "applicants"), {
-      //     ...values,
-      //     file: values.file.uri,
-      //     timeStamp: serverTimestamp(),
-      //   });
-      //   console.log("Document written with ID: ", docRef.id);
-      //   if (docRef?.id) {
-      //     //if succesfull, reset the form and show modal link to feedback
-      //     onSubmitProps.resetForm();
-      //     setIsModalFeed(true);
-      //   }
-      setIsModalFeed(true);
+      const docRef = await addDoc(collection(firestoreDb, "applicants"), {
+        ...values,
+        file: values.file.uri,
+        timeStamp: serverTimestamp(),
+      });
+      console.log("Document written with ID: ", docRef.id);
+      if (docRef?.id) {
+        //if succesfull, reset the form and show modal link to feedback
+        onSubmitProps.resetForm();
+        setIsModalFeed(true);
+      }
     } catch (e) {
       console.error("Error adding document: ", e);
+    }
+  };
+
+  const handleViewCV = () => {
+    // setIsPreviewModal(true)
+
+    file && displayResume(file.uri);
+  };
+
+  const displayResume = async (uri) => {
+    console.log(uri);
+    try {
+      const cUri = await FileSystem.getContentUriAsync(uri);
+
+      await IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
+        data: cUri,
+        flags: 1,
+        type: "application/pdf",
+      });
+    } catch (e) {
+      console.log("IntentLauncher", e.message);
     }
   };
 
@@ -136,14 +160,19 @@ const ApplicationForm = () => {
             </View>
             <View style={{ marginTop: 20, gap: 10, alignItems: "center" }}>
               <FilePicker
+                setDownloadedUri={setDownloadedUri}
                 style={styles.fileBtn}
-                onSelectFile={(file) => setFieldValue("file", file[0])}
+                onSelectFile={(file) => {
+                  setFieldValue("file", file[0]);
+                  setFile(file[0]);
+                }}
               />
               {values.file && (
                 <>
                   <Text style={styles.fileName}>{values.file.name}</Text>
 
-                  <TouchableOpacity>
+                  {/* <TouchableOpacity onPress={() => setIsPreviewModal(true)}> */}
+                  <TouchableOpacity onPress={() => handleViewCV()}>
                     <Text style={styles.viewCVBtn}>View CV</Text>
                   </TouchableOpacity>
                 </>
@@ -181,6 +210,29 @@ const ApplicationForm = () => {
             >
               <Text style={styles.feedBackTextBtn}>Feedback</Text>
             </TouchableOpacity>
+          </View>
+        </Modal>
+      )}
+
+      {isPreviewModal && (
+        <Modal
+          visible={true}
+          animationType="slide"
+          presentationStyle="pageSheet"
+        >
+          <View style={styles.modal}>
+            <TouchableOpacity onPress={() => setIsPreviewModal(false)}>
+              <MaterialCommunityIcons
+                name="close-box-outline"
+                size={40}
+                color={COLORS.tertiary}
+              />
+            </TouchableOpacity>
+
+            <View style={styles.cvBox}>
+              {/* <FileViewer fileUri={file.uri} downloadedUri={downloadedUri} /> */}
+              {/* {file && displayResume(file.uri)} */}
+            </View>
           </View>
         </Modal>
       )}
@@ -292,5 +344,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
     fontSize: 20,
+  },
+
+  cvBox: {
+    marginTop: 20,
+    borderWidth: 1,
+    width: "100%",
+    height: "95%",
   },
 });
