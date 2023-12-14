@@ -2,14 +2,29 @@ import { useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
+import { firestoreDb, collection, addDoc } from "../Database/firebase";
+import { serverTimestamp } from "firebase/firestore";
 
 import { COLORS } from "../constants";
 
 const Feedback = () => {
   const [feedback, setFeedback] = useState("");
 
-  const handlePress = () => {
-    router.push("/");
+  const handlePress = async () => {
+    try {
+      const docRef = await addDoc(collection(firestoreDb, "feedback"), {
+        feedback,
+        timeStamp: serverTimestamp(),
+      });
+      console.log("Document written with ID: ", docRef.id);
+      if (docRef?.id) {
+        //if succesfull, reset the feedback form
+        setFeedback("");
+        router.push("/");
+      }
+    } catch (e) {
+      console.error("Error submitting feedback: ", e);
+    }
   };
 
   return (
